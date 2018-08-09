@@ -20,9 +20,9 @@ String inString = "";
 MultiStepper steppers;
 int n=0;
 bool nRead=false;
+//external interrupt for button for next coordinate
 ISR(INT4_vect)
 {
-	//external interrupt for button for next coordinate
 	static unsigned long last_interrupt_time = 0;
 	unsigned long interrupt_time = millis();
 	//debouncer strategy
@@ -35,9 +35,9 @@ ISR(INT4_vect)
 	}
 	last_interrupt_time = interrupt_time;
 }
+ //external interrupt for button for previous coordinate
 ISR(INT5_vect)
-{
-    //external interrupt for button for previous coordinate
+{ 
 	static unsigned long last_interrupt_time = 0;
 	unsigned long interrupt_time = millis();
    //debouncer strategy
