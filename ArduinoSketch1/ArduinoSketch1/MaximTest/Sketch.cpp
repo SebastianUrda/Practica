@@ -24,7 +24,7 @@ ISR(INT4_vect)
 {
 	static unsigned long last_interrupt_time = 0;
 	unsigned long interrupt_time = millis();
-	//debouncer
+	//debouncer strategy
 	if (interrupt_time - last_interrupt_time > 200)
 	{
 		if(r<n)
@@ -38,7 +38,7 @@ ISR(INT5_vect)
 {
 	static unsigned long last_interrupt_time = 0;
 	unsigned long interrupt_time = millis();
-   //debouncer	
+   //debouncer strategy
 	if (interrupt_time - last_interrupt_time > 200)
 	{
 		if(r>0)
