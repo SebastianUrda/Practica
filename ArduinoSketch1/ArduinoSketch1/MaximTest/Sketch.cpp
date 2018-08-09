@@ -22,6 +22,7 @@ int n=0;
 bool nRead=false;
 ISR(INT4_vect)
 {
+	//external interrupt for button for next coordinate
 	static unsigned long last_interrupt_time = 0;
 	unsigned long interrupt_time = millis();
 	//debouncer strategy
@@ -36,6 +37,7 @@ ISR(INT4_vect)
 }
 ISR(INT5_vect)
 {
+    //external interrupt for button for previous coordinate
 	static unsigned long last_interrupt_time = 0;
 	unsigned long interrupt_time = millis();
    //debouncer strategy
