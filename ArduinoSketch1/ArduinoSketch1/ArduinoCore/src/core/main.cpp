@@ -38,15 +38,16 @@ void initializare()
 	DDRE &= ~(1<<DDE4);
 	EICRB = (EICRB & ~((1 << ISC40) | (1 << ISC41))) | (RISING);
 	EIMSK |= (1 << INT4);
-		//configure external interrupt 4
-		DDRE &= ~(1<<DDE5);
-		EICRB = (EICRB & ~((1 << ISC50) | (1 << ISC51))) | (RISING << ISC50);
-		EIMSK |= (1 << INT5);
+	//configure external interrupt 5
+	DDRE &= ~(1<<DDE5);
+	EICRB = (EICRB & ~((1 << ISC50) | (1 << ISC51))) | (RISING << ISC50);
+	EIMSK |= (1 << INT5);
 	//configure digital pin 13 as output, the laser pin
 	DDRB |= 1<<PB7;
 	PORTB &= ~(1<<PB7);
 	
 }
+/*aplication entry point*/
 int main(void)
 {
 	init();
