@@ -23,11 +23,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
   9 .debug_frame  00001990  00000000  00000000  000199f8  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    000030b2  00000000  00000000  0001b388  2**0
+ 10 .debug_str    000030c0  00000000  00000000  0001b388  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    00009094  00000000  00000000  0001e43a  2**0
+ 11 .debug_loc    00009094  00000000  00000000  0001e448  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 000007e0  00000000  00000000  000274ce  2**0
+ 12 .debug_ranges 000007e0  00000000  00000000  000274dc  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -287,10 +287,10 @@ Disassembly of section .text:
      294:	b5 ce       	rjmp	.-662    	; 0x0 <__vectors>
 
 00000296 <__vector_5>:
-String inString = "";
 MultiStepper steppers;
 int n=0;
 bool nRead=false;
+//external interrupt for button for next coordinate
 ISR(INT4_vect)
 {
      296:	1f 92       	push	r1
@@ -321,7 +321,7 @@ ISR(INT4_vect)
      2c4:	5a d6       	rcall	.+3252   	; 0xf7a <millis>
      2c6:	6b 01       	movw	r12, r22
      2c8:	7c 01       	movw	r14, r24
-	
+	//debouncer strategy
 	if (interrupt_time - last_interrupt_time > 200)
      2ca:	80 91 64 02 	lds	r24, 0x0264	; 0x800264 <_ZZ10__vector_5E19last_interrupt_time>
      2ce:	90 91 65 02 	lds	r25, 0x0265	; 0x800265 <_ZZ10__vector_5E19last_interrupt_time+0x1>
@@ -395,8 +395,9 @@ ISR(INT4_vect)
      368:	18 95       	reti
 
 0000036a <__vector_6>:
+ //external interrupt for button for previous coordinate
 ISR(INT5_vect)
-{
+{ 
      36a:	1f 92       	push	r1
      36c:	0f 92       	push	r0
      36e:	0f b6       	in	r0, 0x3f	; 63
@@ -425,7 +426,7 @@ ISR(INT5_vect)
      398:	f0 d5       	rcall	.+3040   	; 0xf7a <millis>
      39a:	6b 01       	movw	r12, r22
      39c:	7c 01       	movw	r14, r24
-	
+   //debouncer strategy
 	if (interrupt_time - last_interrupt_time > 200)
      39e:	80 91 60 02 	lds	r24, 0x0260	; 0x800260 <__data_end>
      3a2:	90 91 61 02 	lds	r25, 0x0261	; 0x800261 <__data_end+0x1>
@@ -510,8 +511,7 @@ void calibrate()
      444:	de bf       	out	0x3e, r29	; 62
      446:	0f be       	out	0x3f, r0	; 63
      448:	cd bf       	out	0x3d, r28	; 61
-	//Make motors move to blocks
-	myStepperY.setMaxSpeed(100);
+	myStepperY.setMaxSpeed(100);//Make motors move to blocks
      44a:	40 e0       	ldi	r20, 0x00	; 0
      44c:	50 e0       	ldi	r21, 0x00	; 0
      44e:	68 ec       	ldi	r22, 0xC8	; 200
@@ -570,7 +570,6 @@ void calibrate()
      4b0:	8b e6       	ldi	r24, 0x6B	; 107
      4b2:	92 e0       	ldi	r25, 0x02	; 2
      4b4:	0e 94 d3 10 	call	0x21a6	; 0x21a6 <_ZN12MultiStepper18runSpeedToPositionEv>
-	
 	delay(100);
      4b8:	64 e6       	ldi	r22, 0x64	; 100
      4ba:	70 e0       	ldi	r23, 0x00	; 0
@@ -591,7 +590,7 @@ void calibrate()
      4d6:	88 e8       	ldi	r24, 0x88	; 136
      4d8:	97 e0       	ldi	r25, 0x07	; 7
      4da:	0e 94 af 0c 	call	0x195e	; 0x195e <_ZN12AccelStepper18setCurrentPositionEl>
-    //turn motors until laser point is visible
+	//turn motors until laser point is visible
 	positions1[0] = 45;
      4de:	8d e2       	ldi	r24, 0x2D	; 45
      4e0:	90 e0       	ldi	r25, 0x00	; 0
@@ -627,7 +626,6 @@ void calibrate()
      518:	80 e0       	ldi	r24, 0x00	; 0
      51a:	90 e0       	ldi	r25, 0x00	; 0
      51c:	5f d5       	rcall	.+2750   	; 0xfdc <delay>
-	
 	myStepperY.setCurrentPosition(0);
      51e:	40 e0       	ldi	r20, 0x00	; 0
      520:	50 e0       	ldi	r21, 0x00	; 0
@@ -642,7 +640,6 @@ void calibrate()
      532:	88 e8       	ldi	r24, 0x88	; 136
      534:	97 e0       	ldi	r25, 0x07	; 7
      536:	0e 94 af 0c 	call	0x195e	; 0x195e <_ZN12AccelStepper18setCurrentPositionEl>
-
 	Serial.println("DONE!");
      53a:	66 e0       	ldi	r22, 0x06	; 6
      53c:	72 e0       	ldi	r23, 0x02	; 2
@@ -666,7 +663,6 @@ void calibrate()
      55c:	84 e4       	ldi	r24, 0x44	; 68
      55e:	97 e0       	ldi	r25, 0x07	; 7
      560:	0e 94 64 0f 	call	0x1ec8	; 0x1ec8 <_ZN12AccelStepper8setSpeedEf>
-	
 	state=1;
      564:	81 e0       	ldi	r24, 0x01	; 1
      566:	90 e0       	ldi	r25, 0x00	; 0
@@ -684,8 +680,8 @@ void calibrate()
      580:	08 95       	ret
 
 00000582 <_Z7afisarev>:
-			
-		}	
+			}
+		}
 	}
 }
 void afisare()
@@ -947,7 +943,7 @@ void work()
      718:	cf 92       	push	r12
      71a:	ef 92       	push	r14
      71c:	0f 93       	push	r16
-
+﻿#include <Arduino.h>
 #include <AccelStepper.h>
 #include <MultiStepper.h>
 #include <SoftwareSerial.h>
@@ -1017,8 +1013,8 @@ String inString = "";
      766:	a1 c5       	rjmp	.+2882   	; 0x12aa <_ZN6StringD1Ev>
 
 00000768 <_Z6citirev>:
+	myStepperX.setSpeed(9999);
 	myStepperY.setSpeed(9999);
-	
 	state=1;
 }
 void citire()
@@ -1029,29 +1025,29 @@ void citire()
      76e:	1f 93       	push	r17
      770:	cf 93       	push	r28
      772:	df 93       	push	r29
-				 nRead=true;
-				 Serial.print("n=");
-				 Serial.print(n);
-			}
-			else{
-			TabelCoordonate[i][j]=integerValue;
+				n=integerValue;
+				nRead=true;
+				Serial.print("n=");
+				Serial.print(n);
+			}else{
+				TabelCoordonate[i][j]=integerValue;
      774:	16 e0       	ldi	r17, 0x06	; 6
-			{
-				j=0;
-				i++;
-			}
-			if(i==n)
-			state=2;
+				{
+					j=0;
+					i++;
+				}
+				if(i==n)
+				state=2;
      776:	c2 e0       	ldi	r28, 0x02	; 2
      778:	d0 e0       	ldi	r29, 0x00	; 0
 			Serial.println(integerValue);
 			inString = "";
 			if(!nRead)
 			{
-				 n=integerValue;
-				 nRead=true;
+				n=integerValue;
+				nRead=true;
      77a:	01 e0       	ldi	r16, 0x01	; 1
-	
+	myStepperY.setSpeed(9999);
 	state=1;
 }
 void citire()
@@ -1116,18 +1112,18 @@ void citire()
      7da:	81 11       	cpse	r24, r1
      7dc:	15 c0       	rjmp	.+42     	; 0x808 <_Z6citirev+0xa0>
 			{
-				 n=integerValue;
+				n=integerValue;
      7de:	50 93 6a 02 	sts	0x026A, r21	; 0x80026a <n+0x1>
      7e2:	40 93 69 02 	sts	0x0269, r20	; 0x800269 <n>
-				 nRead=true;
+				nRead=true;
      7e6:	00 93 68 02 	sts	0x0268, r16	; 0x800268 <nRead>
-				 Serial.print("n=");
+				Serial.print("n=");
      7ea:	61 e2       	ldi	r22, 0x21	; 33
      7ec:	72 e0       	ldi	r23, 0x02	; 2
      7ee:	8c ec       	ldi	r24, 0xCC	; 204
      7f0:	97 e0       	ldi	r25, 0x07	; 7
      7f2:	bb d2       	rcall	.+1398   	; 0xd6a <_ZN5Print5printEPKc>
-				 Serial.print(n);
+				Serial.print(n);
      7f4:	60 91 69 02 	lds	r22, 0x0269	; 0x800269 <n>
      7f8:	70 91 6a 02 	lds	r23, 0x026A	; 0x80026a <n+0x1>
      7fc:	4a e0       	ldi	r20, 0x0A	; 10
@@ -1136,9 +1132,8 @@ void citire()
      802:	97 e0       	ldi	r25, 0x07	; 7
      804:	5a d3       	rcall	.+1716   	; 0xeba <_ZN5Print5printEii>
      806:	ba cf       	rjmp	.-140    	; 0x77c <_Z6citirev+0x14>
-			}
-			else{
-			TabelCoordonate[i][j]=integerValue;
+			}else{
+				TabelCoordonate[i][j]=integerValue;
      808:	20 91 8e 02 	lds	r18, 0x028E	; 0x80028e <i>
      80c:	30 91 8f 02 	lds	r19, 0x028F	; 0x80028f <i+0x1>
      810:	80 91 8c 02 	lds	r24, 0x028C	; 0x80028c <j>
@@ -1156,33 +1151,33 @@ void citire()
      82c:	fd 4f       	sbci	r31, 0xFD	; 253
      82e:	51 83       	std	Z+1, r21	; 0x01
      830:	40 83       	st	Z, r20
-			j++;
+				j++;
      832:	01 96       	adiw	r24, 0x01	; 1
-			if(j==6)
+				if(j==6)
      834:	86 30       	cpi	r24, 0x06	; 6
      836:	91 05       	cpc	r25, r1
      838:	29 f0       	breq	.+10     	; 0x844 <_Z6citirev+0xdc>
-				 Serial.print("n=");
-				 Serial.print(n);
-			}
-			else{
-			TabelCoordonate[i][j]=integerValue;
-			j++;
+				nRead=true;
+				Serial.print("n=");
+				Serial.print(n);
+			}else{
+				TabelCoordonate[i][j]=integerValue;
+				j++;
      83a:	90 93 8d 02 	sts	0x028D, r25	; 0x80028d <j+0x1>
      83e:	80 93 8c 02 	sts	0x028C, r24	; 0x80028c <j>
      842:	0a c0       	rjmp	.+20     	; 0x858 <_Z6citirev+0xf0>
-			if(j==6)
-			{
-				j=0;
+				if(j==6)
+				{
+					j=0;
      844:	10 92 8d 02 	sts	0x028D, r1	; 0x80028d <j+0x1>
      848:	10 92 8c 02 	sts	0x028C, r1	; 0x80028c <j>
-				i++;
+					i++;
      84c:	2f 5f       	subi	r18, 0xFF	; 255
      84e:	3f 4f       	sbci	r19, 0xFF	; 255
      850:	30 93 8f 02 	sts	0x028F, r19	; 0x80028f <i+0x1>
      854:	20 93 8e 02 	sts	0x028E, r18	; 0x80028e <i>
-			}
-			if(i==n)
+				}
+				if(i==n)
      858:	20 91 8e 02 	lds	r18, 0x028E	; 0x80028e <i>
      85c:	30 91 8f 02 	lds	r19, 0x028F	; 0x80028f <i+0x1>
      860:	80 91 69 02 	lds	r24, 0x0269	; 0x800269 <n>
@@ -1191,13 +1186,12 @@ void citire()
      86a:	39 07       	cpc	r19, r25
      86c:	09 f0       	breq	.+2      	; 0x870 <_Z6citirev+0x108>
      86e:	86 cf       	rjmp	.-244    	; 0x77c <_Z6citirev+0x14>
-			state=2;
+				state=2;
      870:	d0 93 8b 02 	sts	0x028B, r29	; 0x80028b <state+0x1>
      874:	c0 93 8a 02 	sts	0x028A, r28	; 0x80028a <state>
      878:	81 cf       	rjmp	.-254    	; 0x77c <_Z6citirev+0x14>
 			}
-			
-		}	
+		}
 	}
 }
      87a:	df 91       	pop	r29
@@ -2084,14 +2078,14 @@ void initializare()
      cc4:	80 83       	st	Z, r24
 	EIMSK |= (1 << INT4);
      cc6:	ec 9a       	sbi	0x1d, 4	; 29
-		//configure external interrupt 4
-		DDRE &= ~(1<<DDE5);
+	//configure external interrupt 5
+	DDRE &= ~(1<<DDE5);
      cc8:	6d 98       	cbi	0x0d, 5	; 13
-		EICRB = (EICRB & ~((1 << ISC50) | (1 << ISC51))) | (RISING << ISC50);
+	EICRB = (EICRB & ~((1 << ISC50) | (1 << ISC51))) | (RISING << ISC50);
      cca:	80 81       	ld	r24, Z
      ccc:	8c 60       	ori	r24, 0x0C	; 12
      cce:	80 83       	st	Z, r24
-		EIMSK |= (1 << INT5);
+	EIMSK |= (1 << INT5);
      cd0:	ed 9a       	sbi	0x1d, 5	; 29
 	//configure digital pin 13 as output, the laser pin
 	DDRB |= 1<<PB7;
@@ -2103,6 +2097,7 @@ void initializare()
 00000cd8 <main>:
 	
 }
+/*aplication entry point*/
 int main(void)
 {
 	init();
